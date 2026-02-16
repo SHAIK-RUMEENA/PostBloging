@@ -18,13 +18,13 @@ const path = require('path');
 // Create Post
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, author, content } = req.body;
+    const { title, author, content, category } = req.body;
     // let imageUrl = '';
     // if (req.file) {
     //   imageUrl = `/uploads/${req.file.filename}`;
     // }
     const imageUrl = req.file ? req.file.path : '';
-    const post = await Post.create({ title, author, content, imageUrl });
+    const post = await Post.create({ title, author, content, category, imageUrl });
     res.status(201).json(post);
   } catch (error) {
     console.error('Error creating post:', error);
@@ -35,7 +35,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 // Get All Posts
 router.get('/', async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch posts' });
@@ -43,12 +43,34 @@ router.get('/', async (req, res) => {
 });
 
 // Update Post
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const post = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { title, author, content, category } = req.body;
+    const updateData = { title, author, content, category };
+    
+    if (req.file) {
+      updateData.imageUrl = req.file.path;
+    }
+    
+    const post = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.status(200).json(post);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update post' });
+  }
+});
+
+// Like Post
+router.post('/:id/like', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+    post.likes = (post.likes || 0) + 1;
+    await post.save();
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to like post' });
   }
 });
 

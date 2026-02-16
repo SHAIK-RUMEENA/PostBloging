@@ -62,7 +62,7 @@ export default function AuthPage() {
 
     setLoading(true);
     try {
-      const response = await fetch("https://postbloging.onrender.com/api/auth/register", {
+      const response = await fetch("http://localhost:3001/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +104,7 @@ export default function AuthPage() {
 
     setLoading(true);
     try{
-          const response = await fetch('https://postbloging.onrender.com/api/auth/login',{
+          const response = await fetch('http://localhost:3001/api/auth/login',{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email: loginEmail, password: loginPassword}) 

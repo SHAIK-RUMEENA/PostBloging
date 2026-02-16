@@ -16,19 +16,29 @@ const path = require('path');
 //}
 
 // Create Post
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Upload error:', err);
+      // Continue without image if upload fails
+      req.file = null;
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     const { title, author, content, category } = req.body;
-    // let imageUrl = '';
-    // if (req.file) {
-    //   imageUrl = `/uploads/${req.file.filename}`;
-    // }
+    
+    if (!title || !author || !content) {
+      return res.status(400).json({ error: 'Title, author, and content are required' });
+    }
+    
     const imageUrl = req.file ? req.file.path : '';
     const post = await Post.create({ title, author, content, category, imageUrl });
     res.status(201).json(post);
   } catch (error) {
     console.error('Error creating post:', error);
-    res.status(500).json({ error: 'Failed to create post' });
+    res.status(500).json({ error: 'Failed to create post', details: error.message });
   }
 });
 

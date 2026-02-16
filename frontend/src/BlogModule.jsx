@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './blog.css';
 import { useRef } from 'react';
 
-const API_BASE_URL = `https://postbloging.onrender.com/api/posts`;
+const API_BASE_URL = `http://localhost:3001/api/posts`;
 
 
 function BlogModule() {

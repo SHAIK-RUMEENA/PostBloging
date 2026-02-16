@@ -62,7 +62,7 @@ export default function AuthPage() {
 
     setLoading(true);
     try {
-      const response = await fetch("https://postbloging.onrender.com/api/auth/register", {
+      const response = await fetch("http://localhost:3001/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +104,7 @@ export default function AuthPage() {
 
     setLoading(true);
     try{
-          const response = await fetch('https://postbloging.onrender.com/api/auth/login',{
+          const response = await fetch('http://localhost:3001/api/auth/login',{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email: loginEmail, password: loginPassword}) 
@@ -139,7 +139,7 @@ export default function AuthPage() {
       <div className="auth-container">
        
         <div className="form-section authform">
-          <h2>✨ Register</h2>
+          <h2 className="auth-title" >✨ Register</h2>
           <form onSubmit={handleRegister}>
             <div className="input-group">
               <span className="input-icon">👤</span>
@@ -206,7 +206,7 @@ export default function AuthPage() {
         </div>
 
         <div className="form-section authform">
-          <h2>🔐 Login</h2>
+          <h2 className="auth-title">🔐 Login</h2>
           <form onSubmit={handleLogin}>
             <div className="input-group">
               <span className="input-icon">✉️</span>
